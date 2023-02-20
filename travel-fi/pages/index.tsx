@@ -17,7 +17,7 @@ function Home({ experiences }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       {
-        experiences.map((exp: ExperienceType) => <Experience {...exp} />)
+        experiences.map((exp: ExperienceType) => <Experience {...exp} key={exp.exp_id} />)
       }
     </>
   )
