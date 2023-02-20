@@ -1,7 +1,26 @@
-export default function Home() {
+import { ExperienceType } from '@/client/models/experience'
+import { getExperiences } from '@/client/requests/experiencesRequests'
+import Experience from '@/components/Experience'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+
+export const getStaticProps: GetStaticProps<{ experiences: ExperienceType[] }> = async () => {
+  const experiences: ExperienceType[] = await getExperiences()
+  return {
+    props: {
+      experiences
+    }
+  }
+}
+
+function Home({ experiences }: InferGetStaticPropsType<typeof getStaticProps>) {
+
   return (
     <>
-      <h1>Hello World!</h1>
+      {
+        experiences.map((exp: ExperienceType) => <Experience {...exp} />)
+      }
     </>
   )
 }
+
+export default Home
