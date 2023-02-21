@@ -29,7 +29,7 @@ export async function getExperience(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { expId } = req.query
         const response = await db.query('SELECT * FROM experiences WHERE exp_id = $1', [expId])
-        res.json(response.rows)
+        res.json(response.rows[0])
     } catch (error) {
         res.json({ error: "Fetching data failed" })
     }
