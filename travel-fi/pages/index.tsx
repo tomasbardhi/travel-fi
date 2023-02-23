@@ -1,13 +1,13 @@
 import { ExperienceType } from '@/models/experience'
 import Experience from '@/components/Experience'
 import { getExperiencesDAO } from '@/server/dao/experiencesDao'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const experiences: ExperienceType[] = await getExperiencesDAO()
-    for (const exp of experiences) {
+    for (let exp of experiences) {
       exp.exp_date = new Date(exp.exp_date).toISOString().substring(0, 10)
     }
     return {

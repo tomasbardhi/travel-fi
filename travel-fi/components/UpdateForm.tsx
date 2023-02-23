@@ -13,10 +13,9 @@ function UpdateForm(experienceProps: ExperienceType) {
 
     async function handleSendExperience() {
         try {
-            const response = await updateExperience(experience)
-            //console.log(response)
+            await updateExperience(experience)
         } catch (error) {
-            console.log(error)
+            //alert(error)
         }
     }
 

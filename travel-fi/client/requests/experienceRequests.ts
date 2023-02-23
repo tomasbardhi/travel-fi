@@ -5,18 +5,24 @@ const BASE_URL = "http://localhost:3000"
 export async function getExperiences() {
     try {
         const response = await fetch(`${BASE_URL}/api/experiences`)
+        if (!response.ok) {
+            throw new Error(response.status.toString().concat(": " + response.statusText))
+        }
         return response.json()
     } catch (error) {
-        return { error: "Error fetching data" }
+        throw error
     }
 }
 
 export async function getExperience(expId: number) {
     try {
         const response = await fetch(`${BASE_URL}/api/experiences/${expId}`)
+        if (!response.ok) {
+            throw new Error(response.status.toString().concat(": " + response.statusText))
+        }
         return response.json()
     } catch (error) {
-        return { error: "Error fetching data" }
+        throw error
     }
 }
 
@@ -29,8 +35,11 @@ export async function updateExperience(experience: ExperienceType) {
                 'Content-Type': 'application/json; charset=utf-8'
             }
         })
+        if (!response.ok) {
+            throw new Error(response.status.toString().concat(": " + response.statusText))
+        }
         return response.json()
     } catch (error) {
-        return { error: "Error updating data" }
+        throw error
     }
 }
