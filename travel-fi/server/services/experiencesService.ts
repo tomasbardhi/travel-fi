@@ -1,6 +1,8 @@
 import db from '../db'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { QueryResult } from 'pg'
+import { getExperiencesDAO, getExperienceDAO } from '../dao/experiencesDao'
+import { ExperienceType } from '@/models/experience'
 
 /*
     api/experiences/            --> returns all experiences
@@ -9,13 +11,13 @@ import { QueryResult } from 'pg'
 export async function getExperiences(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { expId } = req.query
-        let response: QueryResult
+        let response: ExperienceType | ExperienceType[]
         if (expId) {
-            response = await db.query('SELECT * FROM experiences WHERE exp_id = $1', [expId])
+            response = await getExperienceDAO(Number(expId))
         } else {
-            response = await db.query('SELECT * FROM experiences')
+            response = await getExperiencesDAO()
         }
-        res.json(response.rows)
+        res.json(response)
     } catch (error) {
         res.json({ error: "Fetching data failed" })
     }
@@ -28,8 +30,8 @@ export async function getExperiences(req: NextApiRequest, res: NextApiResponse) 
 export async function getExperience(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { expId } = req.query
-        const response = await db.query('SELECT * FROM experiences WHERE exp_id = $1', [expId])
-        res.json(response.rows[0])
+        const response: ExperienceType = await getExperienceDAO(Number(expId))
+        res.json(response)
     } catch (error) {
         res.json({ error: "Fetching data failed" })
     }

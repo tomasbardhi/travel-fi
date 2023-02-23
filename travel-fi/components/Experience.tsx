@@ -1,4 +1,4 @@
-import { ExperienceType } from "@/client/models/experience"
+import { ExperienceType } from "@/models/experience"
 
 function Experience(exp: ExperienceType) {
 

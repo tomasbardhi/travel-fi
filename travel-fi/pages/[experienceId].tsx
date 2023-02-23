@@ -1,10 +1,14 @@
-import { ExperienceType } from "@/client/models/experience"
-import { getExperience, getExperiences } from "@/client/requests/experiencesRequests"
+import { ExperienceType } from "@/models/experience"
 import Experience from "@/components/Experience"
-import { InferGetStaticPropsType } from "next"
+import NumericInput from "@/components/NumericInput"
+import UpdateForm from "@/components/UpdateForm"
+import { getExperienceDAO, getExperiencesDAO } from "@/server/dao/experiencesDao"
 
 export async function getStaticProps({ params: { experienceId } }: { params: { experienceId: number } }) {
-    const experience: ExperienceType = await getExperience(experienceId)
+
+    const experience: ExperienceType = await getExperienceDAO(experienceId)
+    experience.exp_date = new Date(experience.exp_date).toISOString().substring(0, 10)
+
     return {
         props: {
             experience
@@ -13,7 +17,7 @@ export async function getStaticProps({ params: { experienceId } }: { params: { e
 }
 
 export async function getStaticPaths() {
-    const experiences: ExperienceType[] = await getExperiences()
+    const experiences: ExperienceType[] = await getExperiencesDAO()
     return {
         paths: experiences.map((exp) => {
             return {
@@ -26,10 +30,11 @@ export async function getStaticPaths() {
     }
 }
 
-function SingleExperience({ experience }: InferGetStaticPropsType<typeof getStaticProps>) {
+function SingleExperience({ experience }: { experience: ExperienceType }) {
 
     return (
         <>
+            <UpdateForm {...experience} />
             <Experience {...experience} />
         </>
     )

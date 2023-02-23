@@ -1,4 +1,4 @@
-import { getExperiences } from '@/server/controllers/experiencesController';
+import { getExperiences } from '@/server/services/experiencesService';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(

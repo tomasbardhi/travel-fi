@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getExperience } from '@/server/controllers/experiencesController';
+import { getExperience } from '@/server/services/experiencesService';
 
 export default async function handler(
     req: NextApiRequest,

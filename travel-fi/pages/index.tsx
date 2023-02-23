@@ -1,10 +1,14 @@
-import { ExperienceType } from '@/client/models/experience'
-import { getExperiences } from '@/client/requests/experiencesRequests'
+import { ExperienceType } from '@/models/experience'
 import Experience from '@/components/Experience'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { getExperiencesDAO } from '@/server/dao/experiencesDao'
+import { GetStaticProps } from 'next'
+import Link from 'next/link'
 
-export const getStaticProps: GetStaticProps<{ experiences: ExperienceType[] }> = async () => {
-  const experiences: ExperienceType[] = await getExperiences()
+export const getStaticProps: GetStaticProps = async () => {
+  const experiences: ExperienceType[] = await getExperiencesDAO()
+  for (const exp of experiences) {
+    exp.exp_date = new Date(exp.exp_date).toISOString().substring(0, 10)
+  }
   return {
     props: {
       experiences
@@ -12,12 +16,18 @@ export const getStaticProps: GetStaticProps<{ experiences: ExperienceType[] }> =
   }
 }
 
-function Home({ experiences }: InferGetStaticPropsType<typeof getStaticProps>) {
+function Home({ experiences }: { experiences: ExperienceType[] }) {
 
   return (
     <>
       {
-        experiences.map((exp: ExperienceType) => <Experience {...exp} key={exp.exp_id} />)
+        experiences.map((exp: ExperienceType) => {
+          return (
+            <Link key={exp.exp_id} href={`/${exp.exp_id}`}>
+              <Experience {...exp} />
+            </Link>
+          )
+        })
       }
     </>
   )
