@@ -5,13 +5,19 @@ import { GetStaticProps } from 'next'
 import Link from 'next/link'
 
 export const getStaticProps: GetStaticProps = async () => {
-  const experiences: ExperienceType[] = await getExperiencesDAO()
-  for (const exp of experiences) {
-    exp.exp_date = new Date(exp.exp_date).toISOString().substring(0, 10)
-  }
-  return {
-    props: {
-      experiences
+  try {
+    const experiences: ExperienceType[] = await getExperiencesDAO()
+    for (const exp of experiences) {
+      exp.exp_date = new Date(exp.exp_date).toISOString().substring(0, 10)
+    }
+    return {
+      props: {
+        experiences
+      }
+    }
+  } catch (error) {
+    return {
+      notFound: true
     }
   }
 }

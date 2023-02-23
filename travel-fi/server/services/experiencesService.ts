@@ -1,8 +1,7 @@
-import db from '../db'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { QueryResult } from 'pg'
-import { getExperiencesDAO, getExperienceDAO } from '../dao/experiencesDao'
+import { getExperiencesDAO, getExperienceDAO, updateExperienceDAO } from '../dao/experiencesDao'
 import { ExperienceType } from '@/models/experience'
+import { ErrorType } from '@/models/error'
 
 /*
     api/experiences/            --> returns all experiences
@@ -19,7 +18,17 @@ export async function getExperiences(req: NextApiRequest, res: NextApiResponse) 
         }
         res.json(response)
     } catch (error) {
-        res.json({ error: "Fetching data failed" })
+        let response: ErrorType
+        if (error instanceof Error) {
+            response = {
+                err_msg: error.message
+            }
+        } else {
+            response = {
+                err_msg: "Unknown Error"
+            }
+        }
+        res.json(response)
     }
 }
 
@@ -30,9 +39,42 @@ export async function getExperiences(req: NextApiRequest, res: NextApiResponse) 
 export async function getExperience(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { expId } = req.query
-        const response: ExperienceType = await getExperienceDAO(Number(expId))
+        const response: ExperienceType | ErrorType = await getExperienceDAO(Number(expId))
         res.json(response)
     } catch (error) {
-        res.json({ error: "Fetching data failed" })
+        let response: ErrorType
+        if (error instanceof Error) {
+            response = {
+                err_msg: error.message
+            }
+        } else {
+            response = {
+                err_msg: "Unknown Error"
+            }
+        }
+        res.json(response)
+    }
+}
+
+/*
+    api/experience  +   body    -> updates experience by expId using given body
+*/
+export async function updateExperience(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const experience: ExperienceType = req.body
+        const response: ExperienceType | ErrorType = await updateExperienceDAO(experience)
+        res.json(response)
+    } catch (error) {
+        let response: ErrorType
+        if (error instanceof Error) {
+            response = {
+                err_msg: error.message
+            }
+        } else {
+            response = {
+                err_msg: "Unknown Error"
+            }
+        }
+        res.json(response)
     }
 }
