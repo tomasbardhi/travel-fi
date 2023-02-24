@@ -1,13 +1,12 @@
 import { ExperienceType } from "@/models/experience"
 import Experience from "@/components/Experience"
-import NumericInput from "@/components/NumericInput"
 import UpdateForm from "@/components/UpdateForm"
-import { getExperienceDAO } from "@/server/dao/experiencesDao"
+import { useState } from "react"
+import { getExperienceService } from "@/server/services/experiencesService"
 
 export async function getServerSideProps({ params: { experienceId } }: { params: { experienceId: number } }) {
     try {
-        const experience = await getExperienceDAO(experienceId)
-        experience.exp_date = new Date(experience.exp_date).toISOString().substring(0, 10)
+        const experience = await getExperienceService(experienceId)
         return {
             props: {
                 experience
@@ -20,11 +19,17 @@ export async function getServerSideProps({ params: { experienceId } }: { params:
     }
 }
 
-function SingleExperience({ experience }: { experience: ExperienceType }) {
+function SingleExperience({ experience: experienceProp }: { experience: ExperienceType }) {
+
+    const [experience, setExperience] = useState<ExperienceType>(experienceProp)
+
+    function handleUpdateExperience(updatedExperience: ExperienceType): void {
+        setExperience({ ...updatedExperience })
+    }
 
     return (
         <>
-            <UpdateForm {...experience} />
+            <UpdateForm experience={experience} callback={handleUpdateExperience} />
             <Experience {...experience} />
         </>
     )

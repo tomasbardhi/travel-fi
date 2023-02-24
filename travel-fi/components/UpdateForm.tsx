@@ -2,7 +2,7 @@ import { updateExperience } from "@/client/requests/experienceRequests"
 import { ExperienceType } from "@/models/experience"
 import React, { useState } from "react"
 
-function UpdateForm(experienceProps: ExperienceType) {
+function UpdateForm({ experience: experienceProps, callback }: { experience: ExperienceType, callback: (arg: ExperienceType) => void }) {
 
 
     const [experience, setExperience] = useState<ExperienceType>({ ...experienceProps })
@@ -13,7 +13,9 @@ function UpdateForm(experienceProps: ExperienceType) {
 
     async function handleSendExperience() {
         try {
-            await updateExperience(experience)
+            console.log("update to: ", experience)
+            const exp: ExperienceType = await updateExperience(experience)
+            callback(exp)
         } catch (error) {
             //alert(error)
         }

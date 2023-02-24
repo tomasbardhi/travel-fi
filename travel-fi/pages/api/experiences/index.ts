@@ -1,4 +1,4 @@
-import { getExperiences, updateExperience } from '@/server/services/experiencesService';
+import { getExperiencesController, updateExperienceController } from '@/server/controllers/experiencesController';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -6,9 +6,11 @@ export default async function handler(
     res: NextApiResponse
 ) {
     switch (req.method) {
-        case "GET": await getExperiences(req, res)
+        case "GET":
+            await getExperiencesController(req, res)
             break;
-        case 'PATCH': await updateExperience(req, res)
+        case 'PATCH':
+            await updateExperienceController(req, res)
             break;
         default:
             res.setHeader("Allow", ["GET", "PATCH"])

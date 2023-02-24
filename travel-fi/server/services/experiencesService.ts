@@ -7,28 +7,15 @@ import { ErrorType } from '@/models/error'
     api/experiences/            --> returns all experiences
     api/experiences?expId=1     --> returns experience by expId
 */
-export async function getExperiences(req: NextApiRequest, res: NextApiResponse) {
+export async function getExperiencesService() {
     try {
-        const { expId } = req.query
-        let response: ExperienceType | ExperienceType[]
-        if (expId) {
-            response = await getExperienceDAO(Number(expId))
-        } else {
-            response = await getExperiencesDAO()
+        const response: ExperienceType[] = await getExperiencesDAO()
+        for (let exp of response) {
+            exp.exp_date = new Date(exp.exp_date).toLocaleDateString()
         }
-        res.json(response)
+        return response
     } catch (error) {
-        let response: ErrorType
-        if (error instanceof Error) {
-            response = {
-                err_msg: error.message
-            }
-        } else {
-            response = {
-                err_msg: "Unknown Error"
-            }
-        }
-        res.json(response)
+        throw error
     }
 }
 
@@ -36,45 +23,25 @@ export async function getExperiences(req: NextApiRequest, res: NextApiResponse) 
     api/experiences/1           --> returns experience by expId
     api/experiences?expId=1     --> returns experience by expId
 */
-export async function getExperience(req: NextApiRequest, res: NextApiResponse) {
+export async function getExperienceService(expId: number) {
     try {
-        const { expId } = req.query
-        const response: ExperienceType | ErrorType = await getExperienceDAO(Number(expId))
-        res.json(response)
+        const response: ExperienceType = await getExperienceDAO(Number(expId))
+        response.exp_date = new Date(response.exp_date).toLocaleDateString()
+        return response
     } catch (error) {
-        let response: ErrorType
-        if (error instanceof Error) {
-            response = {
-                err_msg: error.message
-            }
-        } else {
-            response = {
-                err_msg: "Unknown Error"
-            }
-        }
-        res.json(response)
+        throw error
     }
 }
 
 /*
     api/experience  +   body    -> updates experience by expId using given body
 */
-export async function updateExperience(req: NextApiRequest, res: NextApiResponse) {
+export async function updateExperienceService(experience: ExperienceType) {
     try {
-        const experience: ExperienceType = req.body
         const response: ExperienceType | ErrorType = await updateExperienceDAO(experience)
-        res.json(response)
+        response.exp_date = new Date(response.exp_date).toLocaleDateString()
+        return response
     } catch (error) {
-        let response: ErrorType
-        if (error instanceof Error) {
-            response = {
-                err_msg: error.message
-            }
-        } else {
-            response = {
-                err_msg: "Unknown Error"
-            }
-        }
-        res.json(response)
+        throw error
     }
 }
