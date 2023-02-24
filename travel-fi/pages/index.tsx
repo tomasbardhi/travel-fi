@@ -3,6 +3,7 @@ import Experience from '@/components/Experience'
 import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { getExperiencesService } from '@/server/services/experiencesService'
+import { useState } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -19,7 +20,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-function Home({ experiences }: { experiences: ExperienceType[] }) {
+function Home({ experiences: experiencesProps }: { experiences: ExperienceType[] }) {
+
+  const [experiences, setExperiences] = useState<ExperienceType[]>(experiencesProps)
+
+  function handleDeleteExperience(exps: ExperienceType[]) {
+    setExperiences(exps)
+  }
 
   return (
     <>
@@ -27,7 +34,7 @@ function Home({ experiences }: { experiences: ExperienceType[] }) {
         experiences.map((exp: ExperienceType) => {
           return (
             <Link key={exp.exp_id} href={`/${exp.exp_id}`}>
-              <Experience {...exp} />
+              <Experience experience={exp} callback={handleDeleteExperience} />
             </Link>
           )
         })

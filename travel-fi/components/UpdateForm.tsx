@@ -7,13 +7,20 @@ function UpdateForm({ experience: experienceProps, callback }: { experience: Exp
 
     const [experience, setExperience] = useState<ExperienceType>({ ...experienceProps })
 
+    let yyyyMMdd_date = experience.exp_date.replaceAll("/", "-").split("-").map((i: string) => {
+        if (i.length === 1) {
+            return "0".concat(i)
+        } else {
+            return i
+        }
+    }).reverse().join("-")
+
     function handleChangeExperience<T extends keyof ExperienceType>(key: T, value: ExperienceType[T]) {
         setExperience({ ...experience, [key]: value })
     }
 
     async function handleSendExperience() {
         try {
-            console.log("update to: ", experience)
             const exp: ExperienceType = await updateExperience(experience)
             callback(exp)
         } catch (error) {
@@ -33,7 +40,7 @@ function UpdateForm({ experience: experienceProps, callback }: { experience: Exp
             <input value={experience.exp_currency} pattern="^[a-z,A-Z]{0,3}$" onChange={(e) => {
                 e.target.validity.valid ? handleChangeExperience("exp_currency", e.target.value) : e
             }} />
-            <input type="date" value={experience.exp_date ? experience.exp_date.substring(0, 10) : ""} onChange={(e) => {
+            <input type="date" value={yyyyMMdd_date} onChange={(e) => {
                 handleChangeExperience("exp_date", e.target.value)
             }} />
             <input type="button" value="Update Experience" onClick={handleSendExperience} />

@@ -43,3 +43,20 @@ export async function updateExperience(experience: ExperienceType) {
         throw error
     }
 }
+
+export async function deleteExperience(expId: number) {
+    try {
+        const response = await fetch(`${BASE_URL}/api/experiences/${expId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        })
+        if (!response.ok) {
+            throw new Error(response.status.toString().concat(": " + response.statusText));
+        }
+        return response.json()
+    } catch (error) {
+        throw error
+    }
+}

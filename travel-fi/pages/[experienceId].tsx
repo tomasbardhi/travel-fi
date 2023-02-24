@@ -3,6 +3,7 @@ import Experience from "@/components/Experience"
 import UpdateForm from "@/components/UpdateForm"
 import { useState } from "react"
 import { getExperienceService } from "@/server/services/experiencesService"
+import { useRouter } from "next/router"
 
 export async function getServerSideProps({ params: { experienceId } }: { params: { experienceId: number } }) {
     try {
@@ -22,15 +23,20 @@ export async function getServerSideProps({ params: { experienceId } }: { params:
 function SingleExperience({ experience: experienceProp }: { experience: ExperienceType }) {
 
     const [experience, setExperience] = useState<ExperienceType>(experienceProp)
+    const router = useRouter()
 
     function handleUpdateExperience(updatedExperience: ExperienceType): void {
         setExperience({ ...updatedExperience })
     }
 
+    function handleDeleteExperience(exps: ExperienceType[]) {
+        router.push('/')
+    }
+
     return (
         <>
             <UpdateForm experience={experience} callback={handleUpdateExperience} />
-            <Experience {...experience} />
+            <Experience experience={experience} callback={handleDeleteExperience} />
         </>
     )
 }

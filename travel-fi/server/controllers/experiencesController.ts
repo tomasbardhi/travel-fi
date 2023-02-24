@@ -1,7 +1,7 @@
 import { ErrorType } from "@/models/error";
 import { ExperienceType } from "@/models/experience";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getExperienceService, getExperiencesService, updateExperienceService } from "../services/experiencesService";
+import { deleteExperienceService, getExperienceService, getExperiencesService, updateExperienceService } from "../services/experiencesService";
 
 export async function getExperienceController(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -63,5 +63,24 @@ export async function updateExperienceController(req: NextApiRequest, res: NextA
             }
         }
         res.status(404).json(error_PATCH)
+    }
+}
+
+export async function deleteExperienceController(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { expId } = req.query
+        const response_DELETE = await deleteExperienceService(Number(expId))
+        res.json(response_DELETE)
+    } catch (error) {
+        let error_DELETE: ErrorType
+        if (error instanceof Error) {
+            error_DELETE = {
+                err_msg: error.message
+            }
+        } else {
+            error_DELETE = {
+                err_msg: "Unknown error"
+            }
+        }
     }
 }
