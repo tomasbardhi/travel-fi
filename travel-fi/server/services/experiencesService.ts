@@ -1,4 +1,4 @@
-import { getExperiencesDAO, getExperienceDAO, updateExperienceDAO, deleteExperienceDAO } from '../dao/experiencesDao'
+import { getExperiencesDAO, getExperienceDAO, updateExperienceDAO, deleteExperienceDAO, insertExperienceDAO } from '../dao/experiencesDao'
 import { ExperienceType } from '@/models/experience'
 import { ErrorType } from '@/models/error'
 
@@ -37,6 +37,16 @@ export async function updateExperienceService(experience: ExperienceType) {
 export async function deleteExperienceService(expId: number) {
     try {
         await deleteExperienceDAO(expId)
+        const experiences: ExperienceType[] = await getExperiencesService()
+        return experiences
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function insertExperienceService(exp: ExperienceType) {
+    try {
+        await insertExperienceDAO(exp)
         const experiences: ExperienceType[] = await getExperiencesService()
         return experiences
     } catch (error) {

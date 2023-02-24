@@ -60,3 +60,21 @@ export async function deleteExperience(expId: number) {
         throw error
     }
 }
+
+export async function insertExperience(exp: ExperienceType) {
+    try {
+        const response = await fetch(`${BASE_URL}/api/experiences`, {
+            method: 'POST',
+            body: JSON.stringify(exp),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        })
+        if (!response.ok) {
+            throw new Error(response.status.toString().concat(": " + response.statusText));
+        }
+        return response.json()
+    } catch (error) {
+        throw error
+    }
+}

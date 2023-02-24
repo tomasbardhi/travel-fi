@@ -1,24 +1,15 @@
 import { ErrorType } from "@/models/error";
 import { ExperienceType } from "@/models/experience";
 import { NextApiRequest, NextApiResponse } from "next";
-import { deleteExperienceService, getExperienceService, getExperiencesService, updateExperienceService } from "../services/experiencesService";
+import { handleError } from "../helper/errorHandler";
+import { deleteExperienceService, getExperienceService, getExperiencesService, insertExperienceService, updateExperienceService } from "../services/experiencesService";
 
 export async function getExperienceController(req: NextApiRequest, res: NextApiResponse) {
     try {
         const response_GET = await getExperienceService(Number(req.query.expId))
         res.json(response_GET)
     } catch (error) {
-        let error_GET: ErrorType
-        if (error instanceof Error) {
-            error_GET = {
-                err_msg: error.message
-            }
-        } else {
-            error_GET = {
-                err_msg: "Unknown Error"
-            }
-        }
-        res.status(404).json(error_GET)
+        handleError(error, res)
     }
 }
 
@@ -33,17 +24,7 @@ export async function getExperiencesController(req: NextApiRequest, res: NextApi
         }
         res.json(response_GET)
     } catch (error) {
-        let error_GET: ErrorType
-        if (error instanceof Error) {
-            error_GET = {
-                err_msg: error.message
-            }
-        } else {
-            error_GET = {
-                err_msg: "Unknown Error"
-            }
-        }
-        res.status(404).json(error_GET)
+        handleError(error, res)
     }
 }
 
@@ -52,17 +33,7 @@ export async function updateExperienceController(req: NextApiRequest, res: NextA
         const response_PATCH: ExperienceType = await updateExperienceService(req.body as ExperienceType)
         res.json(response_PATCH)
     } catch (error) {
-        let error_PATCH: ErrorType
-        if (error instanceof Error) {
-            error_PATCH = {
-                err_msg: error.message
-            }
-        } else {
-            error_PATCH = {
-                err_msg: "Unknown Error"
-            }
-        }
-        res.status(404).json(error_PATCH)
+        handleError(error, res)
     }
 }
 
@@ -72,15 +43,16 @@ export async function deleteExperienceController(req: NextApiRequest, res: NextA
         const response_DELETE = await deleteExperienceService(Number(expId))
         res.json(response_DELETE)
     } catch (error) {
-        let error_DELETE: ErrorType
-        if (error instanceof Error) {
-            error_DELETE = {
-                err_msg: error.message
-            }
-        } else {
-            error_DELETE = {
-                err_msg: "Unknown error"
-            }
-        }
+        handleError(error, res)
+    }
+}
+
+export async function insertExperienceController(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const experience: ExperienceType = req.body
+        const response_INSERT = await insertExperienceService(experience)
+        res.json(response_INSERT)
+    } catch (error) {
+        handleError(error, res)
     }
 }

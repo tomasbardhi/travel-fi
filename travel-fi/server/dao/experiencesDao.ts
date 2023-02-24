@@ -33,9 +33,17 @@ export async function updateExperienceDAO({ exp_id, exp_name, exp_price, exp_cur
 
 export async function deleteExperienceDAO(expId: number) {
     try {
-        await db.query('DELETE FROM experiences WHERE exp_id = $1', [expId])
-        const experiences: ExperienceType[] = await getExperiencesDAO()
-        return experiences
+        const queryResult = await db.query('DELETE FROM experiences WHERE exp_id = $1', [expId])
+        return queryResult
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function insertExperienceDAO({ exp_name, exp_price, exp_currency, exp_date }: ExperienceType) {
+    try {
+        const queryResult = await db.query('INSERT INTO experiences (exp_name, exp_price, exp_currency, exp_date) VALUES ($1, $2, $3, $4)', [exp_name, exp_price, exp_currency, exp_date])
+        return queryResult
     } catch (error) {
         throw error
     }
