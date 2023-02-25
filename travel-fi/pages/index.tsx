@@ -4,8 +4,9 @@ import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { getExperiencesService } from '@/server/services/experiencesService'
 import { useState } from 'react'
-import InsertForm from '@/components/InsertForm'
 import { insertExperience } from '@/client/requests/experienceRequests'
+import CustomForm from '@/components/CustomForm'
+import { transformDate } from '@/server/helper/dateHelpers'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -31,6 +32,14 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
   }
 
   async function handleInsertExperience(exp: ExperienceType) {
+    if (!exp.exp_name.length || exp.exp_name.length < 2) {
+      alert("Insert Name / Name must be longer than 1 character")
+      return
+    }
+    if (!exp.exp_currency || exp.exp_currency.length != 3) {
+      alert("Insert Currency / Currency must be exactly 3 character")
+      return
+    }
     try {
       const response: ExperienceType[] = await insertExperience(exp)
       setExperiences(response)
@@ -39,28 +48,17 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
     }
   }
 
-  const date: Date = new Date()
-  let currentDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`
-
-  let yyyyMMdd_date = currentDate.split("-").map((i: string) => {
-    if (i.length === 1) {
-      return "0".concat(i)
-    } else {
-      return i
-    }
-  }).join("-")
-
   const emptyExperience: ExperienceType = {
     exp_id: 0,
     exp_name: "",
     exp_price: 0,
     exp_currency: "",
-    exp_date: yyyyMMdd_date
+    exp_date: transformDate(new Date().toISOString())
   }
 
   return (
     <>
-      <InsertForm experience={emptyExperience} callback={handleInsertExperience} />
+      <CustomForm experience={emptyExperience} callback={handleInsertExperience} buttonName='Add Experience' hidden={true} />
       {
         experiences.map((exp: ExperienceType) => {
           return (

@@ -1,9 +1,10 @@
 import { ExperienceType } from "@/models/experience"
 import Experience from "@/components/Experience"
-import UpdateForm from "@/components/UpdateForm"
 import { useState } from "react"
 import { getExperienceService } from "@/server/services/experiencesService"
 import { useRouter } from "next/router"
+import { updateExperience } from "@/client/requests/experienceRequests"
+import CustomForm from "@/components/CustomForm"
 
 export async function getServerSideProps({ params: { experienceId } }: { params: { experienceId: number } }) {
     try {
@@ -25,8 +26,13 @@ function SingleExperience({ experience: experienceProp }: { experience: Experien
     const [experience, setExperience] = useState<ExperienceType>(experienceProp)
     const router = useRouter()
 
-    function handleUpdateExperience(updatedExperience: ExperienceType): void {
-        setExperience({ ...updatedExperience })
+    async function handleUpdateExperience(newExperience: ExperienceType) {
+        try {
+            await updateExperience(newExperience)
+            setExperience({ ...newExperience })
+        } catch (error) {
+            alert(error)
+        }
     }
 
     function handleDeleteExperience(exps: ExperienceType[]) {
@@ -35,7 +41,7 @@ function SingleExperience({ experience: experienceProp }: { experience: Experien
 
     return (
         <>
-            <UpdateForm experience={experience} callback={handleUpdateExperience} />
+            <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" hidden={false} />
             <Experience experience={experience} callback={handleDeleteExperience} />
         </>
     )

@@ -1,4 +1,3 @@
-import { ErrorType } from "@/models/error";
 import { ExperienceType } from "@/models/experience";
 import { NextApiRequest, NextApiResponse } from "next";
 import { handleError } from "../helper/errorHandler";

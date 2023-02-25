@@ -19,13 +19,12 @@ export async function getExperienceDAO(expId: number): Promise<ExperienceType> {
     }
 }
 
-export async function updateExperienceDAO({ exp_id, exp_name, exp_price, exp_currency, exp_date }: ExperienceType): Promise<ExperienceType> {
+export async function updateExperienceDAO({ exp_id, exp_name, exp_price, exp_currency, exp_date }: ExperienceType) {
     try {
-        await db.query(
+        const queryResult = await db.query(
             'UPDATE experiences SET exp_name = $1, exp_price = $2, exp_currency = $3, exp_date = $4 WHERE exp_id = $5', [exp_name, exp_price, exp_currency, exp_date, exp_id]
         )
-        const experience: ExperienceType = await getExperienceDAO(exp_id)
-        return experience
+        return queryResult
     } catch (error) {
         throw error
     }

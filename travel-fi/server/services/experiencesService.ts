@@ -1,12 +1,12 @@
 import { getExperiencesDAO, getExperienceDAO, updateExperienceDAO, deleteExperienceDAO, insertExperienceDAO } from '../dao/experiencesDao'
 import { ExperienceType } from '@/models/experience'
-import { ErrorType } from '@/models/error'
+import { transformDate } from '../helper/dateHelpers'
 
 export async function getExperiencesService() {
     try {
         const response: ExperienceType[] = await getExperiencesDAO()
         for (let exp of response) {
-            exp.exp_date = new Date(exp.exp_date).toLocaleDateString()
+            exp.exp_date = transformDate(exp.exp_date)
         }
         return response
     } catch (error) {
@@ -17,18 +17,18 @@ export async function getExperiencesService() {
 export async function getExperienceService(expId: number) {
     try {
         const response: ExperienceType = await getExperienceDAO(Number(expId))
-        response.exp_date = new Date(response.exp_date).toLocaleDateString()
+        response.exp_date = transformDate(response.exp_date)
         return response
     } catch (error) {
         throw error
     }
 }
 
-export async function updateExperienceService(experience: ExperienceType) {
+export async function updateExperienceService(exp: ExperienceType) {
     try {
-        const response: ExperienceType | ErrorType = await updateExperienceDAO(experience)
-        response.exp_date = new Date(response.exp_date).toLocaleDateString()
-        return response
+        await updateExperienceDAO(exp)
+        const experience: ExperienceType = await getExperienceService(exp.exp_id)
+        return experience
     } catch (error) {
         throw error
     }
