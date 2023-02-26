@@ -16,7 +16,7 @@ function CustomForm({ experience: experienceProps, callback, hidden, buttonName 
     return (
         <>
             <input hidden={hidden} value={experience.exp_id} readOnly />
-            <input value={experience.exp_name} pattern="^.{0,100}$" placeholder='Name' onChange={(e) => {
+            <input value={experience.exp_name} pattern="^.{0,50}$" placeholder='Name' onChange={(e) => {
                 e.target.validity.valid ? handleChangeExperience("exp_name", e.target.value) : e
             }} />
             <input value={experience.exp_price} pattern="^\d{0,7}$" placeholder='Price' onChange={(e) => {

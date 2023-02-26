@@ -56,9 +56,27 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
     exp_date: transformDate(new Date().toISOString())
   }
 
+  const expenses = experiences.reduce((prev: { [key: string]: number }, curr: ExperienceType) => {
+    if (!prev[curr.exp_currency.toUpperCase()]) {
+      prev[curr.exp_currency.toUpperCase()] = 0
+    }
+    return { ...prev, [curr.exp_currency.toUpperCase()]: Number(prev[curr.exp_currency.toUpperCase()]) + Number(curr.exp_price) }
+  }, {})
+
   return (
     <>
       <CustomForm experience={emptyExperience} callback={handleInsertExperience} buttonName='Add Experience' hidden={true} />
+      {
+        Object.keys(expenses).length !== 0
+          ?
+          Object.keys(expenses).map((key) => {
+            return (
+              <h1 key={key}>{expenses[key] + " " + key}</h1>
+            )
+          })
+          :
+          <h1>No expenses</h1>
+      }
       {
         experiences.map((exp: ExperienceType) => {
           return (
