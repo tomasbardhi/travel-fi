@@ -1,18 +1,18 @@
 import { ExperienceType } from '@/models/experience'
 import db from '../db'
 
-export async function getExperiencesDAO(): Promise<ExperienceType[]> {
+export async function getExperiencesDAO(userId: number): Promise<ExperienceType[]> {
     try {
-        const queryResult = await db.query('SELECT * FROM experiences')
+        const queryResult = await db.query('SELECT * FROM experiences WHERE exp_user_id = $1', [userId])
         return queryResult.rows
     } catch (error) {
         throw error
     }
 }
 
-export async function getExperienceDAO(expId: number): Promise<ExperienceType> {
+export async function getExperienceDAO(userId: number, expId: number): Promise<ExperienceType> {
     try {
-        const queryResult = await db.query('SELECT * FROM experiences WHERE exp_id = $1', [expId])
+        const queryResult = await db.query('SELECT * FROM experiences WHERE exp_user_id = $1 AND exp_id = $2', [userId, expId])
         return queryResult.rows[0]
     } catch (error) {
         throw error
@@ -30,18 +30,18 @@ export async function updateExperienceDAO({ exp_id, exp_name, exp_price, exp_cur
     }
 }
 
-export async function deleteExperienceDAO(expId: number) {
+export async function deleteExperienceDAO(userId: number, expId: number) {
     try {
-        const queryResult = await db.query('DELETE FROM experiences WHERE exp_id = $1', [expId])
+        const queryResult = await db.query('DELETE FROM experiences WHERE exp_user_id = $1 AND exp_id = $2', [userId, expId])
         return queryResult
     } catch (error) {
         throw error
     }
 }
 
-export async function insertExperienceDAO({ exp_name, exp_price, exp_currency, exp_date }: ExperienceType) {
+export async function insertExperienceDAO({ exp_user_id, exp_name, exp_price, exp_currency, exp_date }: ExperienceType) {
     try {
-        const queryResult = await db.query('INSERT INTO experiences (exp_name, exp_price, exp_currency, exp_date) VALUES ($1, $2, $3, $4)', [exp_name, exp_price, exp_currency, exp_date])
+        const queryResult = await db.query('INSERT INTO experiences (exp_user_id, exp_name, exp_price, exp_currency, exp_date) VALUES ($1, $2, $3, $4, $5)', [exp_user_id, exp_name, exp_price, exp_currency, exp_date])
         return queryResult
     } catch (error) {
         throw error

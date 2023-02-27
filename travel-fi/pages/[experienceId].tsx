@@ -5,10 +5,22 @@ import { getExperienceService } from "@/server/services/experiencesService"
 import { useRouter } from "next/router"
 import { updateExperience } from "@/client/requests/experienceRequests"
 import CustomForm from "@/components/CustomForm"
+import { getSession } from "next-auth/react"
+import { IncomingMessage } from "http"
 
-export async function getServerSideProps({ params: { experienceId } }: { params: { experienceId: number } }) {
+export async function getServerSideProps({ params: { experienceId }, req }: { params: { experienceId: number }, req: IncomingMessage }) {
     try {
-        const experience = await getExperienceService(experienceId)
+        const session = await getSession({ req })
+        if (!session) {
+            return {
+                redirect: {
+                    destination: '/api/auth/signin',
+                    permanent: false
+                }
+            }
+        }
+
+        const experience = await getExperienceService(Number(session?.id), experienceId)
         return {
             props: {
                 experience

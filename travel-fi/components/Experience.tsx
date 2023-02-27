@@ -17,6 +17,7 @@ function Experience({ experience, callback }: { experience: ExperienceType, call
     return (
         <div style={{ display: "flex", margin: "30px", fontSize: "12px", justifyContent: "space-between", backgroundColor: "lightgray" }}>
             <h1>{experience.exp_id}</h1>
+            <h1>{experience.exp_user_id}</h1>
             <h1>{experience.exp_name}</h1>
             <h1>{experience.exp_price}</h1>
             <h1>{experience.exp_currency}</h1>

@@ -7,13 +7,28 @@ import { useState } from 'react'
 import { insertExperience } from '@/client/requests/experienceRequests'
 import CustomForm from '@/components/CustomForm'
 import { transformDate } from '@/server/helper/dateHelpers'
+import { getSession, signIn, signOut } from "next-auth/react"
+import { Session } from 'next-auth'
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   try {
-    const experiences: ExperienceType[] = await getExperiencesService()
+    const session = await getSession({ req })
+
+    if (!session) {
+      return {
+        redirect: {
+          destination: '/api/auth/signin',
+          permanent: false
+        }
+      }
+    }
+
+    const experiences: ExperienceType[] = await getExperiencesService(session.id)
+
     return {
       props: {
-        experiences
+        experiences,
+        session,
       }
     }
   } catch (error) {
@@ -23,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-function Home({ experiences: experiencesProps }: { experiences: ExperienceType[] }) {
+function Home({ experiences: experiencesProps, session }: { experiences: ExperienceType[], session: Session }) {
 
   const [experiences, setExperiences] = useState<ExperienceType[]>(experiencesProps)
 
@@ -32,6 +47,9 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
   }
 
   async function handleInsertExperience(exp: ExperienceType) {
+    if (!session) {
+      return
+    }
     if (!exp.exp_name.length || exp.exp_name.length < 2) {
       alert("Insert Name / Name must be longer than 1 character")
       return
@@ -40,6 +58,12 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
       alert("Insert Currency / Currency must be exactly 3 character")
       return
     }
+    if (session.id === 0) {
+      return
+    }
+
+    exp.exp_user_id = session.id
+
     try {
       const response: ExperienceType[] = await insertExperience(exp)
       setExperiences(response)
@@ -50,6 +74,7 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
 
   const emptyExperience: ExperienceType = {
     exp_id: 0,
+    exp_user_id: 0,
     exp_name: "",
     exp_price: 0,
     exp_currency: "",
@@ -60,11 +85,28 @@ function Home({ experiences: experiencesProps }: { experiences: ExperienceType[]
     if (!prev[curr.exp_currency.toUpperCase()]) {
       prev[curr.exp_currency.toUpperCase()] = 0
     }
-    return { ...prev, [curr.exp_currency.toUpperCase()]: Number(prev[curr.exp_currency.toUpperCase()]) + Number(curr.exp_price) }
+    return { ...prev, [curr.exp_currency.toUpperCase()]: +prev[curr.exp_currency.toUpperCase()] + +curr.exp_price }
   }, {})
+
+  if (!session) {
+
+    return (
+      <>
+        Not Signed In !!! <br />
+        <br />
+        <button onClick={() => signIn()}>Sign In</button>
+        <button onClick={() => signOut()}>Sign Out</button>
+      </>
+    )
+  }
 
   return (
     <>
+      <h1>Hi {session.user?.name}</h1>
+      <br />
+      <button onClick={() => signOut()}>Sign Out</button>
+      <br />
+
       <CustomForm experience={emptyExperience} callback={handleInsertExperience} buttonName='Add Experience' hidden={true} />
       {
         Object.keys(expenses).length !== 0

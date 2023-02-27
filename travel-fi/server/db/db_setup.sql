@@ -1,11 +1,76 @@
+DROP TABLE IF EXISTS experiences;
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE accounts
+(
+  id                   SERIAL,
+  compound_id          VARCHAR(255),
+  user_id              INTEGER NOT NULL,
+  provider_type        VARCHAR(255) NOT NULL,
+  provider_id          VARCHAR(255) NOT NULL,
+  provider_account_id  VARCHAR(255) NOT NULL,
+  refresh_token        TEXT,
+  access_token         TEXT,
+  access_token_expires TIMESTAMPTZ,
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at           TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE sessions
+(
+  id            SERIAL,
+  user_id       INTEGER NOT NULL,
+  expires       TIMESTAMPTZ NOT NULL,
+  session_token VARCHAR(255) NOT NULL,
+  access_token  VARCHAR(255),
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE users
+(
+  id             SERIAL,
+  name           VARCHAR(255),
+  email          VARCHAR(255),
+  email_verified TIMESTAMPTZ,
+  image          TEXT,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS experiences (
-    exp_id SERIAL NOT NULL PRIMARY KEY,
+    exp_id SERIAL NOT NULL,
+    exp_user_id INT,
     exp_name VARCHAR(50) NOT NULL,
     exp_price NUMERIC(9,2) NOT NULL,
     exp_currency CHAR(3) NOT NULL,
-    exp_date DATE NOT NULL
+    exp_date DATE NOT NULL,
+    PRIMARY KEY (exp_id),
+    FOREIGN KEY (exp_user_id) REFERENCES users (id)
+
 );
 
+
+CREATE UNIQUE INDEX compound_id ON accounts(compound_id);
+
+CREATE INDEX provider_account_id ON accounts(provider_account_id);
+
+CREATE INDEX provider_id ON accounts(provider_id);
+
+CREATE INDEX user_id ON accounts(user_id);
+
+CREATE UNIQUE INDEX session_token ON sessions(session_token);
+
+CREATE UNIQUE INDEX access_token ON sessions(access_token);
+
+CREATE UNIQUE INDEX email ON users(email);
+
+/*
 insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('Soup - Knorr, Chicken Noodle', 380.54, 'UAH', '2023-02-11');
 insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('Onions Granulated', 55175.96, 'EUR', '2023-01-19');
 insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('Grouper - Fresh', 74035.78, 'PAB', '2022-06-13');
@@ -106,3 +171,4 @@ insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('P
 insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('Yeast Dry - Fermipan', 84492.83, 'RUB', '2022-06-25');
 insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('Ham - Cooked Bayonne Tinned', 11353.99, 'IDR', '2022-06-24');
 insert into experiences (exp_name, exp_price, exp_currency, exp_date) values ('Pate - Peppercorn', 61146.47, 'HUF', '2023-02-03');
+*/

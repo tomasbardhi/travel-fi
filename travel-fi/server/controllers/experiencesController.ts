@@ -1,11 +1,13 @@
 import { ExperienceType } from "@/models/experience";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 import { handleError } from "../helper/errorHandler";
 import { deleteExperienceService, getExperienceService, getExperiencesService, insertExperienceService, updateExperienceService } from "../services/experiencesService";
 
 export async function getExperienceController(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const response_GET = await getExperienceService(Number(req.query.expId))
+        const session = await getSession({ req })
+        const response_GET = await getExperienceService(Number(session?.id), Number(req.query.expId))
         res.json(response_GET)
     } catch (error) {
         handleError(error, res)
@@ -14,12 +16,13 @@ export async function getExperienceController(req: NextApiRequest, res: NextApiR
 
 export async function getExperiencesController(req: NextApiRequest, res: NextApiResponse) {
     try {
+        const session = await getSession({ req })
         const { expId } = req.query
         let response_GET: ExperienceType | ExperienceType[]
         if (expId) {
-            response_GET = await getExperienceService(Number(req.query.expId))
+            response_GET = await getExperienceService(Number(session?.id), Number(req.query.expId))
         } else {
-            response_GET = await getExperiencesService()
+            response_GET = await getExperiencesService(Number(session?.id))
         }
         res.json(response_GET)
     } catch (error) {
@@ -38,8 +41,9 @@ export async function updateExperienceController(req: NextApiRequest, res: NextA
 
 export async function deleteExperienceController(req: NextApiRequest, res: NextApiResponse) {
     try {
+        const session = await getSession({ req })
         const { expId } = req.query
-        const response_DELETE = await deleteExperienceService(Number(expId))
+        const response_DELETE = await deleteExperienceService(Number(session?.id), Number(expId))
         res.json(response_DELETE)
     } catch (error) {
         handleError(error, res)
