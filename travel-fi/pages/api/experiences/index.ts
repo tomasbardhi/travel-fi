@@ -1,4 +1,4 @@
-import { getExperiencesController, insertExperienceController, updateExperienceController } from '@/server/controllers/experiencesController';
+import { deleteExperienceController, getExperiencesController, insertExperienceController, updateExperienceController } from '@/server/controllers/experiencesController';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react';
 
@@ -23,8 +23,11 @@ export default async function handler(
         case 'POST':
             await insertExperienceController(req, res)
             break;
+        case 'DELETE':
+            await deleteExperienceController(req, res)
+            break;
         default:
-            res.setHeader("Allow", ["GET", "PATCH", "POST"])
+            res.setHeader("Allow", ["GET", "PATCH", "POST", "DELETE"])
             res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }

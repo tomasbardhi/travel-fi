@@ -1,48 +1,90 @@
-import { ExperienceType } from '@/models/experience'
-import db from '../db'
+import prisma from '../../server/db/prismadb'
+import { Experience } from '.prisma/client'
+import { Prisma } from '@prisma/client'
 
-export async function getExperiencesDAO(userId: number): Promise<ExperienceType[]> {
+export async function getExperiencesDAO(userId: string): Promise<Experience[]> {
     try {
-        const queryResult = await db.query('SELECT * FROM experiences WHERE exp_user_id = $1', [userId])
-        return queryResult.rows
+        if (!userId) {
+            throw new Error("ID missing")
+        }
+        const queryResult = await prisma.experience.findMany({
+            where: {
+                userId: userId
+            }
+        })
+        return JSON.parse(JSON.stringify(queryResult))
     } catch (error) {
         throw error
     }
 }
 
-export async function getExperienceDAO(userId: number, expId: number): Promise<ExperienceType> {
+export async function getExperienceDAO(expId: string, userId: string): Promise<Experience | null> {
     try {
-        const queryResult = await db.query('SELECT * FROM experiences WHERE exp_user_id = $1 AND exp_id = $2', [userId, expId])
-        return queryResult.rows[0]
+        if (!userId || !expId) {
+            throw new Error("IDs missing")
+        }
+        const queryResult = await prisma.experience.findFirst({
+            where: {
+                id: expId,
+                userId: userId
+            }
+        })
+        return JSON.parse(JSON.stringify(queryResult))
     } catch (error) {
         throw error
     }
 }
 
-export async function updateExperienceDAO({ exp_id, exp_name, exp_price, exp_currency, exp_date }: ExperienceType) {
+export async function updateExperienceDAO(exp: Experience) {
     try {
-        const queryResult = await db.query(
-            'UPDATE experiences SET exp_name = $1, exp_price = $2, exp_currency = $3, exp_date = $4 WHERE exp_id = $5', [exp_name, exp_price, exp_currency, exp_date, exp_id]
+        const queryResult = await prisma.experience.update({
+            where: {
+                id: exp.id,
+            },
+            data: {
+                name: exp.name,
+                price: exp.price,
+                currency: exp.currency,
+                date: exp.date
+            }
+        })
+        return JSON.parse(JSON.stringify(queryResult))
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function deleteExperienceDAO(expId: string, userId: string) {
+    try {
+        const queryResult = await prisma.$queryRaw(Prisma.sql
+            `DELETE FROM "Experience" WHERE "id"=${expId} AND "userId"=${userId}`
         )
-        return queryResult
+        return JSON.parse(JSON.stringify(queryResult))
     } catch (error) {
         throw error
     }
 }
 
-export async function deleteExperienceDAO(userId: number, expId: number) {
+export async function insertExperienceDAO(exp: Experience) {
     try {
-        const queryResult = await db.query('DELETE FROM experiences WHERE exp_user_id = $1 AND exp_id = $2', [userId, expId])
-        return queryResult
-    } catch (error) {
-        throw error
-    }
-}
-
-export async function insertExperienceDAO({ exp_user_id, exp_name, exp_price, exp_currency, exp_date }: ExperienceType) {
-    try {
-        const queryResult = await db.query('INSERT INTO experiences (exp_user_id, exp_name, exp_price, exp_currency, exp_date) VALUES ($1, $2, $3, $4, $5)', [exp_user_id, exp_name, exp_price, exp_currency, exp_date])
-        return queryResult
+        const userByUserId = await prisma.user.findUnique({
+            where: {
+                id: exp.userId
+            }
+        })
+        if (!userByUserId) {
+            throw new Error("Couldn't find user to assign experience!")
+        }
+        const queryResult = await prisma.experience.create({
+            data: {
+                userId: exp.userId,
+                name: exp.name,
+                price: exp.price,
+                currency: exp.currency,
+                date: exp.date
+            }
+        })
+        return JSON.parse(JSON.stringify(queryResult))
     } catch (error) {
         throw error
     }

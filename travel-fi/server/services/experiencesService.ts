@@ -1,53 +1,56 @@
 import { getExperiencesDAO, getExperienceDAO, updateExperienceDAO, deleteExperienceDAO, insertExperienceDAO } from '../dao/experiencesDao'
-import { ExperienceType } from '@/models/experience'
 import { transformDate } from '../helper/dateHelpers'
+import { Experience } from '@prisma/client'
 
-export async function getExperiencesService(userId: number) {
+export async function getExperiencesService(userId: string,) {
     try {
-        const response: ExperienceType[] = await getExperiencesDAO(userId)
-        for (let exp of response) {
-            exp.exp_date = transformDate(exp.exp_date)
+        const response: Experience[] = await getExperiencesDAO(userId)
+        /*for (let exp of response) {
+            exp.date = transformDate(exp.date)
+        }*/
+        return response
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function getExperienceService(expId: string, userId: string) {
+    try {
+        const response: Experience | null = await getExperienceDAO(expId, userId)
+        if (!response) {
+            throw new Error("Experience not found!")
         }
+        //response.date = new Date(transformDate(response.date.toString()))
         return response
     } catch (error) {
         throw error
     }
 }
 
-export async function getExperienceService(userId: number, expId: number) {
-    try {
-        const response: ExperienceType = await getExperienceDAO(userId, expId)
-        response.exp_date = transformDate(response.exp_date)
-        return response
-    } catch (error) {
-        throw error
-    }
-}
-
-export async function updateExperienceService(exp: ExperienceType) {
+export async function updateExperienceService(exp: Experience) {
     try {
         await updateExperienceDAO(exp)
-        const experience: ExperienceType = await getExperienceService(exp.exp_user_id, exp.exp_id)
+        const experience: Experience = await getExperienceService(exp.id, exp.userId)
         return experience
     } catch (error) {
         throw error
     }
 }
 
-export async function deleteExperienceService(userId: number, expId: number) {
+export async function deleteExperienceService(userId: string, expId: string) {
     try {
-        await deleteExperienceDAO(userId, expId)
-        const experiences: ExperienceType[] = await getExperiencesService(userId)
+        await deleteExperienceDAO(expId, userId)
+        const experiences: Experience[] = await getExperiencesService(userId)
         return experiences
     } catch (error) {
         throw error
     }
 }
 
-export async function insertExperienceService(exp: ExperienceType) {
+export async function insertExperienceService(exp: Experience) {
     try {
         await insertExperienceDAO(exp)
-        const experiences: ExperienceType[] = await getExperiencesService(exp.exp_user_id)
+        const experiences: Experience[] = await getExperiencesService(exp.userId)
         return experiences
     } catch (error) {
         throw error

@@ -1,5 +1,4 @@
-import { ExperienceType } from "@/models/experience"
-import Experience from "@/components/Experience"
+import ExperienceComponent from "@/components/ExperienceComponent"
 import { useState } from "react"
 import { getExperienceService } from "@/server/services/experiencesService"
 import { useRouter } from "next/router"
@@ -7,8 +6,10 @@ import { updateExperience } from "@/client/requests/experienceRequests"
 import CustomForm from "@/components/CustomForm"
 import { getSession } from "next-auth/react"
 import { IncomingMessage } from "http"
+import { Experience } from '@prisma/client'
+import NumericInput from "@/components/NumericInput"
 
-export async function getServerSideProps({ params: { experienceId }, req }: { params: { experienceId: number }, req: IncomingMessage }) {
+export async function getServerSideProps({ params: { experienceId }, req }: { params: { experienceId: string }, req: IncomingMessage }) {
     try {
         const session = await getSession({ req })
         if (!session) {
@@ -20,7 +21,8 @@ export async function getServerSideProps({ params: { experienceId }, req }: { pa
             }
         }
 
-        const experience = await getExperienceService(Number(session?.id), experienceId)
+        const experience = await getExperienceService(experienceId, session.id)
+
         return {
             props: {
                 experience
@@ -33,12 +35,12 @@ export async function getServerSideProps({ params: { experienceId }, req }: { pa
     }
 }
 
-function SingleExperience({ experience: experienceProp }: { experience: ExperienceType }) {
+function SingleExperience({ experience: experienceProp }: { experience: Experience }) {
 
-    const [experience, setExperience] = useState<ExperienceType>(experienceProp)
+    const [experience, setExperience] = useState<Experience>(experienceProp)
     const router = useRouter()
 
-    async function handleUpdateExperience(newExperience: ExperienceType) {
+    async function handleUpdateExperience(newExperience: Experience) {
         try {
             await updateExperience(newExperience)
             setExperience({ ...newExperience })
@@ -47,14 +49,15 @@ function SingleExperience({ experience: experienceProp }: { experience: Experien
         }
     }
 
-    function handleDeleteExperience(exps: ExperienceType[]) {
+    function handleDeleteExperience(exps: Experience[]) {
         router.push('/')
     }
 
     return (
         <>
+            <NumericInput />
             <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" hidden={false} />
-            <Experience experience={experience} callback={handleDeleteExperience} />
+            <ExperienceComponent experience={experience} callback={handleDeleteExperience} />
         </>
     )
 }

@@ -1,4 +1,4 @@
-import { ExperienceType } from "@/models/experience"
+import { Experience } from "@prisma/client"
 
 const BASE_URL = "http://127.0.0.1:3000"
 
@@ -14,7 +14,7 @@ export async function getExperiences() {
     }
 }
 
-export async function getExperience(expId: number) {
+export async function getExperience(expId: string) {
     try {
         const response = await fetch(`${BASE_URL}/api/experiences/${expId}`)
         if (!response.ok) {
@@ -26,7 +26,7 @@ export async function getExperience(expId: number) {
     }
 }
 
-export async function updateExperience(experience: ExperienceType) {
+export async function updateExperience(experience: Experience) {
     try {
         const response = await fetch(`${BASE_URL}/api/experiences`, {
             method: 'PATCH',
@@ -44,7 +44,7 @@ export async function updateExperience(experience: ExperienceType) {
     }
 }
 
-export async function deleteExperience(expId: number) {
+export async function deleteExperience(expId: string) {
     try {
         const response = await fetch(`${BASE_URL}/api/experiences/${expId}`, {
             method: 'DELETE',
@@ -61,7 +61,7 @@ export async function deleteExperience(expId: number) {
     }
 }
 
-export async function insertExperience(exp: ExperienceType) {
+export async function insertExperience(exp: Experience) {
     try {
         const response = await fetch(`${BASE_URL}/api/experiences`, {
             method: 'POST',

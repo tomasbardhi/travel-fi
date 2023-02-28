@@ -1,9 +1,9 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
-import db from '../../../server/db/index'
-import PostgresAdapter from "@/server/db/adapter"
 import GoogleProvider from "next-auth/providers/google"
-import RedditProvider from "next-auth/providers/reddit";
+import RedditProvider from "next-auth/providers/reddit"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import prisma from "../../../server/db/prismadb"
 
 export default NextAuth({
     providers: [
@@ -25,7 +25,7 @@ export default NextAuth({
             }
         })
     ],
-    adapter: PostgresAdapter(db),
+    adapter: PrismaAdapter(prisma),
     session: {
         strategy: "jwt"
     },

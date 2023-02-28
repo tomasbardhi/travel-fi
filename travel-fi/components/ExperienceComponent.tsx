@@ -1,13 +1,14 @@
 import { deleteExperience } from "@/client/requests/experienceRequests"
-import { ExperienceType } from "@/models/experience"
+import { transformDate } from "@/server/helper/dateHelpers"
+import { Experience } from "@prisma/client"
 import React from "react"
 
-function Experience({ experience, callback }: { experience: ExperienceType, callback: ((experiences: ExperienceType[]) => void) }) {
+function ExperienceComponent({ experience, callback }: { experience: Experience, callback: ((experiences: Experience[]) => void) }) {
 
     async function handleDeleteExperience(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
         try {
-            const experiences = await deleteExperience(experience.exp_id)
+            const experiences = await deleteExperience(experience.id)
             callback(experiences)
         } catch (error) {
             alert(error)
@@ -16,16 +17,14 @@ function Experience({ experience, callback }: { experience: ExperienceType, call
 
     return (
         <div style={{ display: "flex", margin: "30px", fontSize: "12px", justifyContent: "space-between", backgroundColor: "lightgray" }}>
-            <h1>{experience.exp_id}</h1>
-            <h1>{experience.exp_user_id}</h1>
-            <h1>{experience.exp_name}</h1>
-            <h1>{experience.exp_price}</h1>
-            <h1>{experience.exp_currency}</h1>
-            <h1>{experience.exp_date}</h1>
+            <h1>{experience.name}</h1>
+            <h1>{experience.price.toString()}</h1>
+            <h1>{experience.currency}</h1>
+            <h1>{transformDate(experience.date.toString())}</h1>
             <button onClick={(e) => handleDeleteExperience(e)}>DELETE</button>
         </div>
     )
 
 }
 
-export default Experience
+export default ExperienceComponent
