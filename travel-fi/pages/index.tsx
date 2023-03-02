@@ -79,6 +79,7 @@ function Home({ experiences: experiencesProps, session }: { experiences: Experie
         </div>
         <div className={styles.form}>
           <CustomForm experience={emptyExperience} callback={handleInsertExperience} buttonName='Add Experience' />
+          {/* <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" /> */}
         </div>
       </div>
     </>

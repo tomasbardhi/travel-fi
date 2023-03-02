@@ -55,7 +55,7 @@ function SingleExperiencePage({ experience: experienceProp }: { experience: Expe
     return (
         <>
             <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" />
-            <SingleExperience experience={experience} callback={handleDeleteExperience} />
+            {/* <SingleExperience experience={experience} callback={handleDeleteExperience} /> */}
         </>
     )
 }
