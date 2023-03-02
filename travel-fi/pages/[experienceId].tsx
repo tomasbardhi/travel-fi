@@ -1,4 +1,3 @@
-import ExperienceComponent from "@/components/ExperienceComponent"
 import { useState } from "react"
 import { getExperienceService } from "@/server/services/experiencesService"
 import { useRouter } from "next/router"
@@ -7,7 +6,7 @@ import CustomForm from "@/components/CustomForm"
 import { getSession } from "next-auth/react"
 import { IncomingMessage } from "http"
 import { Experience } from '@prisma/client'
-import NumericInput from "@/components/NumericInput"
+import SingleExperience from "@/components/SingleExperience"
 
 export async function getServerSideProps({ params: { experienceId }, req }: { params: { experienceId: string }, req: IncomingMessage }) {
     try {
@@ -35,7 +34,7 @@ export async function getServerSideProps({ params: { experienceId }, req }: { pa
     }
 }
 
-function SingleExperience({ experience: experienceProp }: { experience: Experience }) {
+function SingleExperiencePage({ experience: experienceProp }: { experience: Experience }) {
 
     const [experience, setExperience] = useState<Experience>(experienceProp)
     const router = useRouter()
@@ -55,11 +54,10 @@ function SingleExperience({ experience: experienceProp }: { experience: Experien
 
     return (
         <>
-            <NumericInput />
-            <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" hidden={false} />
-            <ExperienceComponent experience={experience} callback={handleDeleteExperience} />
+            <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" />
+            <SingleExperience experience={experience} callback={handleDeleteExperience} />
         </>
     )
 }
 
-export default SingleExperience
+export default SingleExperiencePage

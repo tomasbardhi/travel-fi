@@ -1,0 +1,133 @@
+.main {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90vh;
+    right: 0;
+    top: 0;
+    width: 25%;
+    margin-top: 5vh;
+    margin-right: 1.5em;
+    background-color: #070707;
+    border-radius: 0.5em;
+
+    * {
+        background-color: #070707;
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+
+
+
+        input {
+            width: 80%;
+            height: 65px;
+            border: 1px solid rgb(29, 29, 29);
+            margin-top: 1em;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-radius: 5px;
+        }
+    }
+
+    .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 10%;
+
+        h1 {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            height: 100%;
+            font-size: 22px;
+            font-weight: bold;
+            font-family: 'Comfortaa', sans-serif;
+            text-transform: lowercase;
+            color: #ad71bb;
+        }
+    }
+
+    .numericInput {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20%;
+
+        input {
+            font-family: 'Comfortaa', sans-serif;
+            border: none;
+            border-radius: 0px;
+            border-bottom: 1px solid rgb(39, 39, 39);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 40px;
+            text-align: center;
+
+            &:focus-visible {
+                border-color: white;
+            }
+
+        }
+
+    }
+
+    .otherInputs {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+
+        input {
+
+            &:focus-visible {
+                border-color: white;
+            }
+        }
+
+
+    }
+
+    .submit {
+        height: 15%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #C17FD0;
+            border: 1px solid rgb(36, 36, 36);
+            border-color: #C17FD0;
+            border-radius: 5px;
+            font-family: 'Comfortaa', sans-serif;
+            letter-spacing: 0.15rem;
+            font-size: 30px;
+            text-transform: lowercase;
+
+            &:hover {
+                background-color: #C17FD0;
+                color: black;
+                border-color: transparent;
+                cursor: pointer;
+            }
+        }
+
+    }
+
+}
