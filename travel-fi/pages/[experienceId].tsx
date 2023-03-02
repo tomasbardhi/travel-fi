@@ -43,6 +43,7 @@ function SingleExperiencePage({ experience: experienceProp }: { experience: Expe
         try {
             await updateExperience(newExperience)
             setExperience({ ...newExperience })
+            router.push('/')
         } catch (error) {
             alert(error)
         }
