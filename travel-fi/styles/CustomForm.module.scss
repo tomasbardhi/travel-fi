@@ -54,7 +54,8 @@
             font-weight: bold;
             font-family: 'Comfortaa', sans-serif;
             text-transform: lowercase;
-            color: #ad71bb;
+            // color: #ad71bb;
+            color: rgb(112, 112, 112);
         }
     }
 
@@ -90,10 +91,23 @@
         align-items: center;
         margin: auto;
 
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            color-scheme: dark;
+            opacity: 0.6;
+            font-size: 1.2rem;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
         input {
 
             &:focus-visible {
                 border-color: white;
+
+
             }
         }
 

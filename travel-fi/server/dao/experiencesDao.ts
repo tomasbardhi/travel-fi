@@ -10,6 +10,9 @@ export async function getExperiencesDAO(userId: string): Promise<Experience[]> {
         const queryResult = await prisma.experience.findMany({
             where: {
                 userId: userId
+            },
+            orderBy: {
+                date: 'desc'
             }
         })
         return JSON.parse(JSON.stringify(queryResult))

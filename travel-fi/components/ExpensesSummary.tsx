@@ -1,4 +1,6 @@
 import { Experience } from '@prisma/client'
+import styles from "@/styles/ExpensesSummary.module.scss"
+import currency from "@/client/helperFn/currency"
 
 function ExpensesSummary({ experiences }: { experiences: Experience[] }) {
 
@@ -10,19 +12,29 @@ function ExpensesSummary({ experiences }: { experiences: Experience[] }) {
     }, {})
 
     return (
-        <>
+        <div className={styles.main}>
             {
                 Object.keys(expenses).length !== 0
                     ?
                     Object.keys(expenses).map((key) => {
                         return (
-                            <h1 key={key}>{expenses[key] + " " + key}</h1>
+                            <div key={key} className={styles.container}>
+                                <div>
+                                    {
+                                        currency.hasOwnProperty(key)
+                                            ?
+                                            <h1><span>{currency[key as keyof typeof currency].symbol + " "}</span>{expenses[key]}</h1>
+                                            :
+                                            <h1>{key + " " + expenses[key]}</h1>
+                                    }
+                                </div>
+                            </div>
                         )
                     })
                     :
-                    <h1>No expenses</h1>
+                    <></>
             }
-        </>
+        </div >
     )
 }
 

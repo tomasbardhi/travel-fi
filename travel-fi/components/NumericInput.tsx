@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Experience, Prisma } from '@prisma/client'
-import transformPrice from '@/client/helperFn/tranformPrice'
+import { transformPrice, formatPrice } from '@/client/helperFn/tranformPrice'
 import cleanPrice from '@/client/helperFn/cleanPrice'
 
 function NumericInput({ priceProp, currencyProp, callback }: { priceProp: Prisma.Decimal, currencyProp: string, callback: <T extends keyof Experience>(key: T, value: Experience[T]) => void }) {
@@ -31,6 +31,9 @@ function NumericInput({ priceProp, currencyProp, callback }: { priceProp: Prisma
                     }
                 }
             } else {
+                if (testPrice.length > 8) {
+                    return
+                }
                 if (testPrice.length === 0 && e.key === '0') {
                     return
                 }
@@ -49,7 +52,7 @@ function NumericInput({ priceProp, currencyProp, callback }: { priceProp: Prisma
         <>
             <input type="text"
                 readOnly
-                value={currencyProp.concat(' '.concat(price))}
+                value={currencyProp.concat(' '.concat(formatPrice(price.replaceAll('.', ''))))}
                 onKeyDown={(e) => onFakeChange(e)}
             />
         </>

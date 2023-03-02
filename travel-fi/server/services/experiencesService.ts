@@ -1,13 +1,9 @@
 import { getExperiencesDAO, getExperienceDAO, updateExperienceDAO, deleteExperienceDAO, insertExperienceDAO } from '../dao/experiencesDao'
-import { transformDate } from '../helper/dateHelpers'
 import { Experience } from '@prisma/client'
 
 export async function getExperiencesService(userId: string,) {
     try {
         const response: Experience[] = await getExperiencesDAO(userId)
-        /*for (let exp of response) {
-            exp.date = transformDate(exp.date)
-        }*/
         return response
     } catch (error) {
         throw error
@@ -20,7 +16,6 @@ export async function getExperienceService(expId: string, userId: string) {
         if (!response) {
             throw new Error("Experience not found!")
         }
-        //response.date = new Date(transformDate(response.date.toString()))
         return response
     } catch (error) {
         throw error

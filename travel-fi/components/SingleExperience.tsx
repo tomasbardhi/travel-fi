@@ -3,6 +3,8 @@ import { transformDate } from "@/server/helper/dateHelpers"
 import { Experience } from "@prisma/client"
 import styles from "@/styles/SingleExperience.module.scss"
 import Link from "next/link"
+import cleanPrice from "@/client/helperFn/cleanPrice"
+import { transformPrice, formatPrice } from "@/client/helperFn/tranformPrice"
 
 function SingleExperience({ experience, callback }: { experience: Experience, callback: ((experiences: Experience[]) => void) }) {
 
@@ -20,7 +22,7 @@ function SingleExperience({ experience, callback }: { experience: Experience, ca
         <div className={styles.main}>
             <div className={styles.container}>
                 <h1>{experience.name}</h1>
-                <h1>{experience.price.toString()}</h1>
+                <h1>{formatPrice(cleanPrice(experience.price))}</h1>
                 <h1>{experience.currency}</h1>
                 <h1>{transformDate(experience.date.toString())}</h1>
                 <div>

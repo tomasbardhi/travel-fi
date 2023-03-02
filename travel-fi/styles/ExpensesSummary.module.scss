@@ -1,0 +1,51 @@
+.main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    .container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        min-width: 400px;
+
+        div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgb(10, 10, 10);
+            background: linear-gradient(333deg, rgba(10, 10, 10, 1) 0%, rgba(0, 0, 0, 1) 100%);
+            border: 1px solid rgb(24, 24, 24);
+            color: white;
+            border-radius: 2px;
+
+            span {
+                color: rgb(92, 92, 92);
+                background-color: transparent;
+                font-size: 2rem;
+                font-family: "Comfortaa", cursive;
+                font-weight: lighter;
+            }
+
+            h1 {
+                color: white;
+                background-color: transparent;
+                font-size: 2rem;
+                font-weight: 700;
+                font-family: "Comfortaa", cursive;
+            }
+
+        }
+
+    }
+
+}

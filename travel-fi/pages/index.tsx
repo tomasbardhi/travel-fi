@@ -24,6 +24,10 @@ function Home({ experiences: experiencesProps, session }: { experiences: Experie
     if (!session) {
       return
     }
+    if (exp.date.toString() === "Invalid Date") {
+      alert("Inser Date / Date format is wrong")
+      return
+    }
     if (!exp.name.length || exp.name.length < 2) {
       alert("Insert Name / Name must be longer than 1 character")
       return
@@ -70,7 +74,7 @@ function Home({ experiences: experiencesProps, session }: { experiences: Experie
       <div className={styles.main}>
         <div className={styles.mainContainer}>
           <UserComponent username={session.user?.name} signOut={signOut} />
-          {/* <ExpensesSummary experiences={experiences} /> */}
+          <ExpensesSummary experiences={experiences} />
           <ExperiencesList experiences={experiences} callback={handleDeleteExperience} />
         </div>
         <div className={styles.form}>
