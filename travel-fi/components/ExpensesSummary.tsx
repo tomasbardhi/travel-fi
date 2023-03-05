@@ -8,7 +8,7 @@ function ExpensesSummary({ experiences }: { experiences: Experience[] }) {
         if (!prev[curr.currency.toUpperCase()]) {
             prev[curr.currency.toUpperCase()] = 0
         }
-        return { ...prev, [curr.currency.toUpperCase()]: +prev[curr.currency.toUpperCase()] + +curr.price }
+        return { ...prev, [curr.currency.toUpperCase()]: Number((parseFloat(prev[curr.currency.toUpperCase()].toString()) + parseFloat(curr.price.toString())).toFixed(2)) }
     }, {})
 
     return (

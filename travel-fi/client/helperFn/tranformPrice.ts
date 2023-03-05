@@ -37,3 +37,28 @@ export function formatPrice(str: string) {
     }
 
 }
+
+export function formatPrice2(str: string) {
+    const n = 3
+    const l = str.length
+    if (!l || l == 0) {
+        str = '0.00'
+    } else if (l == 1) {
+        str = '0.0'.concat(str)
+    } else if (l == 2) {
+        str = '0.'.concat(str)
+    } else if (l > 2) {
+        let firstPart = str.slice(0, str.length - 2)
+        let secondPart = str.slice(str.length - 2)
+
+        firstPart = firstPart.split('').reverse().join('')
+        let strArr: string[] = []
+        for (let i = 0; i < firstPart.length; i = i + 3) {
+            strArr.push(firstPart.substring(i, i + n))
+        }
+
+        firstPart = strArr.join(',').split('').reverse().join('')
+        str = (firstPart.concat('.')).concat(secondPart)
+    }
+    return str
+}
