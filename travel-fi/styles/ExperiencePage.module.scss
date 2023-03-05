@@ -1,0 +1,55 @@
+@media only screen and (max-width: 1700px) {
+
+    .main {
+
+        div {
+            height: 100vh;
+            border: none !important;
+            justify-content: space-between !important;
+
+            div {
+
+                h1 {
+                    justify-content: center !important;
+                    align-items: center !important;
+                    width: 100% !important;
+                    height: 25% !important;
+                    font-size: 25px !important;
+                    margin-top: 7vh !important;
+                    padding: 0;
+                    border-radius: 5px;
+                    border: none !important;
+                    color: #C17FD0 !important;
+
+                }
+
+                input {
+                    font-size: 15px !important;
+                    padding: 15px !important;
+                }
+
+            }
+
+            &>div:nth-of-type(2) {
+
+                input {
+                    font-size: 35px !important;
+                }
+
+            }
+
+            &>div:last-of-type {
+                input {
+                    width: 80%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 17px !important;
+                }
+            }
+
+        }
+
+    }
+
+}

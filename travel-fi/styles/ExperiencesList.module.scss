@@ -73,3 +73,26 @@
 
     }
 }
+
+@media only screen and (max-width: 1700px) {
+    .main {
+        width: 100%;
+
+
+        .container {
+
+            * {
+                font-size: 10px;
+            }
+        }
+
+        .empty {
+
+            h1 {
+                font-weight: 600;
+                font-size: 10px;
+            }
+
+        }
+    }
+}

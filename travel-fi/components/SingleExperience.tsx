@@ -26,7 +26,7 @@ function SingleExperience({ experience, callback }: { experience: Experience, ca
                 <h1>{experience.currency}</h1>
                 <h1>{transformDate(experience.date.toString())}</h1>
                 <div>
-                    <div>
+                    <div className={styles.openDiv}>
                         <Link className={styles.link} href={`/${experience.id}`}>
                             <button className={styles.openBtn}>Open</button>
                         </Link>

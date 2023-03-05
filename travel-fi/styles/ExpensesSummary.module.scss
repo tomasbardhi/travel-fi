@@ -49,3 +49,32 @@
     }
 
 }
+
+@media only screen and (max-width: 1700px) {
+    .main {
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            min-width: 150px;
+
+            div {
+                border-radius: 2px;
+
+                span {
+                    font-size: 1rem;
+                }
+
+                h1 {
+                    font-size: 1rem;
+                }
+
+            }
+
+        }
+
+    }
+}

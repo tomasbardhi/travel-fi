@@ -7,6 +7,7 @@ import { getSession } from "next-auth/react"
 import { IncomingMessage } from "http"
 import { Experience } from '@prisma/client'
 import SingleExperience from "@/components/SingleExperience"
+import styles from "@/styles/ExperiencePage.module.scss"
 
 export async function getServerSideProps({ params: { experienceId }, req }: { params: { experienceId: string }, req: IncomingMessage }) {
     try {
@@ -54,10 +55,10 @@ function SingleExperiencePage({ experience: experienceProp }: { experience: Expe
     }
 
     return (
-        <>
+        <div className={styles.main}>
             <CustomForm experience={experience} callback={handleUpdateExperience} buttonName="Update Experience" />
             {/* <SingleExperience experience={experience} callback={handleDeleteExperience} /> */}
-        </>
+        </div>
     )
 }
 
