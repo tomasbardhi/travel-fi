@@ -1,6 +1,6 @@
 import { Experience } from "@prisma/client"
 
-const BASE_URL = "http://127.0.0.1:3000"
+const BASE_URL = "https://tomasbardhi.com"
 
 export async function getExperiences() {
     try {
